@@ -16,7 +16,7 @@ import { API_URL } from '../config';
 
 const settingsOptions = [
   'Account Profile',
-  'Calendar Integration',
+  'Calendar Integration',   // We'll navigate to the new screen from here
   'Fitness Preferences',
   'Diet Preferences',
   'Notifications',
@@ -36,7 +36,7 @@ export default function SettingsScreen({ navigation }) {
         const token = await AsyncStorage.getItem('userToken');
         const response = await fetch(`${API_URL}/user`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
@@ -62,6 +62,16 @@ export default function SettingsScreen({ navigation }) {
     }
   };
 
+  // Handle navigation based on settings item pressed
+  const handleOptionPress = (option) => {
+    if (option === 'Calendar Integration') {
+      navigation.navigate('CalendarIntegrationScreen'); 
+    } else {
+      // Handle other options as needed
+      Alert.alert('Selected Option', option);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
@@ -77,7 +87,7 @@ export default function SettingsScreen({ navigation }) {
       <FlatList
         data={settingsOptions}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.option}>
+          <TouchableOpacity style={styles.option} onPress={() => handleOptionPress(item)}>
             <Text style={styles.optionText}>{item}</Text>
             <MaterialIcons name="chevron-right" size={24} color="gray" />
           </TouchableOpacity>
@@ -93,10 +103,7 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
   profile: {
     alignItems: 'center',
     marginTop: 20,
@@ -134,13 +141,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 15,
   },
-  optionText: {
-    fontSize: 16,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#ccc',
-  },
+  optionText: { fontSize: 16 },
+  separator: { height: 1, backgroundColor: '#ccc' },
   logoutButton: {
     backgroundColor: '#007bff',
     padding: 15,
