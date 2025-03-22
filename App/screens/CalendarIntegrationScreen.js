@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Button, FlatList, ActivityIndicator } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import { useNavigation } from '@react-navigation/native';
 
 // This usually helps with the in-app browser hooking
 WebBrowser.maybeCompleteAuthSession();
@@ -15,6 +16,15 @@ export default function App() {
   const [accessToken, setAccessToken] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+
+    const navigation = useNavigation();
+  
+    useEffect(() => {
+      navigation.setOptions({
+        title: 'Calendar', 
+        headerBackTitle: 'Back',
+      });
+    }, [navigation]);
 
   // Build Auth URL
   const discovery = {

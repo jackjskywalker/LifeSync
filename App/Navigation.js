@@ -16,6 +16,11 @@ import WorkoutRoutineScreen from './screens/WorkoutRoutineScreen';
 import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
+import NotificationScreen from './screens/NotificationScreen';
+import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
+import PrivacyAndSecurityScreen from './screens/PrivacyAndSecurityScreen';
+import HelpCenterScreen from './screens/HelpCenterScreen';
+import AccountProfileScreen from './screens/AccountProfileScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext();
@@ -60,6 +65,26 @@ const SettingsStackNavigator = () => (
     <Stack.Screen
       name="CalendarIntegrationScreen"
       component={CalendarIntegrationScreen}
+    />
+    <Stack.Screen
+      name = "NotificationScreen"
+      component={NotificationScreen}
+    />
+    <Stack.Screen
+      name = "TermsAndConditionsScreen"
+      component={TermsAndConditionsScreen}
+    />
+    <Stack.Screen
+      name = "PrivacyAndSecurityScreen"
+      component={PrivacyAndSecurityScreen}
+    />
+    <Stack.Screen
+      name = "HelpCenterScreen"
+      component={HelpCenterScreen}
+    />
+    <Stack.Screen
+      name = "AccountProfileScreen"
+      component={AccountProfileScreen}
     />
   </Stack.Navigator>
 );
