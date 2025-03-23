@@ -1,4 +1,4 @@
-// SettingsScreen.js
+// screens/SettingScreen.js
 
 import React, { useContext, useEffect, useState } from 'react';
 import {
@@ -16,7 +16,7 @@ import { API_URL } from '../config';
 
 const settingsOptions = [
   'Account Profile',
-  'Calendar Integration',   // We'll navigate to the new screen from here
+  'Calendar Integration',
   'Fitness Preferences',
   'Diet Preferences',
   'Notifications',
@@ -65,9 +65,10 @@ export default function SettingsScreen({ navigation }) {
   // Handle navigation based on settings item pressed
   const handleOptionPress = (option) => {
     if (option === 'Calendar Integration') {
-      navigation.navigate('CalendarIntegrationScreen'); 
+      navigation.navigate('CalendarIntegrationScreen');
+    } else if (option === 'Fitness Preferences') {
+      navigation.navigate('FitnessPreferenceScreen');
     } else {
-      // Handle other options as needed
       Alert.alert('Selected Option', option);
     }
   };

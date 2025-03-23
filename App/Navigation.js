@@ -1,14 +1,17 @@
 // Navigation.js
+
 import React, { useEffect, useState, createContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialIcons } from 'react-native-vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import FitnessScreen from './screens/FitnessScreen';
 import HealthScreen from './screens/HealthScreen';
 import StatsScreen from './screens/StatsScreen';
-import SettingsScreen from './screens/SettingScreen'; // Ensure your filename matches
+import SettingsScreen from './screens/SettingScreen'; 
 import CalendarIntegrationScreen from './screens/CalendarIntegrationScreen';
+import FitnessPreferenceScreen from './screens/FitnessPreferenceScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
@@ -16,12 +19,24 @@ import WorkoutRoutineScreen from './screens/WorkoutRoutineScreen';
 import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
+import RecommendedProgramScreen from './screens/RecommendedProgramScreen'; // <-- Import the new screen
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// 0) Home Stack: This shows the recommended workout program on the home page
+const HomeStackNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="RecommendedProgram"
+      component={RecommendedProgramScreen}
+      options={{ headerShown: false }} // or set a header if you prefer
+    />
+  </Stack.Navigator>
+);
 
 // 1) Fitness Stack: holds screens for the Fitness tab
 const FitnessStackNavigator = () => (
@@ -49,7 +64,7 @@ const HealthStackNavigator = () => (
   </Stack.Navigator>
 );
 
-// 3) Settings Stack: holds SettingsScreen + CalendarIntegrationScreen
+// 3) Settings Stack: holds SettingsScreen, CalendarIntegrationScreen, FitnessPreferenceScreen
 const SettingsStackNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen
@@ -61,6 +76,10 @@ const SettingsStackNavigator = () => (
       name="CalendarIntegrationScreen"
       component={CalendarIntegrationScreen}
     />
+    <Stack.Screen
+      name="FitnessPreferenceScreen"
+      component={FitnessPreferenceScreen}
+    />
   </Stack.Navigator>
 );
 
@@ -68,9 +87,11 @@ const SettingsStackNavigator = () => (
 const MainTabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
+      tabBarIcon: ({ color, size }) => {
         let iconName;
-        if (route.name === 'Fitness') {
+        if (route.name === 'Home') {
+          iconName = 'home';
+        } else if (route.name === 'Fitness') {
           iconName = 'bolt';
         } else if (route.name === 'Health') {
           iconName = 'person';
@@ -79,24 +100,22 @@ const MainTabNavigator = () => (
         } else if (route.name === 'Settings') {
           iconName = 'settings';
         }
-
         return <MaterialIcons name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: '#007bff',
       tabBarInactiveTintColor: 'gray',
       tabBarStyle: { paddingBottom: 15, paddingTop: 5 },
+      headerShown: false, // Hide headers on tab screens
     })}
   >
-    {/* Fitness tab -> FitnessStackNavigator */}
+    {/* 
+      NEW 'Home' tab goes first. 
+      It loads the HomeStackNavigator which shows RecommendedProgramScreen. 
+    */}
+    <Tab.Screen name="Home" component={HomeStackNavigator} />
     <Tab.Screen name="Fitness" component={FitnessStackNavigator} />
-
-    {/* Health tab -> HealthStackNavigator */}
     <Tab.Screen name="Health" component={HealthStackNavigator} />
-
-    {/* Stats tab -> direct StatsScreen */}
     <Tab.Screen name="Stats" component={StatsScreen} />
-
-    {/* Settings tab -> SettingsStackNavigator (includes CalendarIntegrationScreen) */}
     <Tab.Screen name="Settings" component={SettingsStackNavigator} />
   </Tab.Navigator>
 );
@@ -126,10 +145,8 @@ const Navigation = () => {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {isAuthenticated ? (
-            // If logged in, show the main tab navigator
             <Stack.Screen name="MainMenu" component={MainTabNavigator} />
           ) : (
-            // If not logged in, show login-related flows
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Register" component={RegisterScreen} />
