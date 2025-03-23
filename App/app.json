@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "LifeSync",
+    "slug": "lifesync",
+    "scheme": "lifesync", 
+    "owner": "jackjskywalker",
+    "android": {
+      "package": "com.lifesync.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.lifesync.app"
+    }
+  }
+}

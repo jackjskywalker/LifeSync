@@ -13,11 +13,15 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api', userRoutes); 
 
+<<<<<<< HEAD
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
 const PORT = process.env.PORT || 5000;
+=======
+const PORT = process.env.PORT || 5500;
+>>>>>>> 531fd90118cdb16597f89dd139704a8c932e08bc
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

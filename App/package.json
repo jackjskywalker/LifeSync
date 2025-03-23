@@ -1,10 +1,15 @@
 {
+<<<<<<< HEAD
   "name": "lifesync",
+=======
+  "name": "LifeSync",
+>>>>>>> 531fd90118cdb16597f89dd139704a8c932e08bc
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "react-native run-android",
+<<<<<<< HEAD
     "ios": "react-native run-ios",
     "test": "jest"
   },
@@ -31,6 +36,30 @@
     "pg": "^8.14.1",
     "react-native": "0.76.3",
     "react-native-gesture-handler": "^2.21.2",
+=======
+    "ios": "react-native run-ios"
+  },
+  "dependencies": {
+    "@expo/ngrok": "4.1.0",
+    "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "@react-native-picker/picker": "^2.11.0",
+    "@react-navigation/bottom-tabs": "^7.0.13",
+    "@react-navigation/native": "^7.0.8",
+    "@react-navigation/stack": "^7.1.1",
+    "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.2.0",
+    "expo": "^52.0.11",
+    "expo-auth-session": "^6.0.3",
+    "expo-calendar": "~14.0.6",
+    "expo-constants": "~17.0.8",
+    "expo-file-system": "^18.0.11",
+    "expo-google-app-auth": "~8.3.0",
+    "react-native": "0.76.3",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-gesture-handler": "^2.21.2",
+    "react-native-picker-select": "^9.3.1",
+>>>>>>> 531fd90118cdb16597f89dd139704a8c932e08bc
     "react-native-reanimated": "^3.16.3",
     "react-native-safe-area-context": "^4.14.0",
     "react-native-screens": "^4.3.0",
@@ -38,10 +67,14 @@
     "react-native-tab-view": "^4.0.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@react-native-community/cli": "latest",
     "@testing-library/react-native": "^13.2.0",
     "jest": "^29.7.0",
     "react-test-renderer": "^18.3.1",
     "supertest": "^7.0.0"
+=======
+    "@react-native-community/cli": "latest"
+>>>>>>> 531fd90118cdb16597f89dd139704a8c932e08bc
   }
 }
