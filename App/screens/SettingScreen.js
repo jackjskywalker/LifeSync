@@ -16,7 +16,7 @@ import { API_URL } from '../config';
 
 const settingsOptions = [
   'Account Profile',
-  'Calendar Integration',
+  'Schedule Availability',
   'Fitness Preferences',
   'Diet Preferences',
   'Notifications',
@@ -64,8 +64,8 @@ export default function SettingsScreen({ navigation }) {
 
   // Handle navigation based on settings item pressed
   const handleOptionPress = (option) => {
-    if (option === 'Calendar Integration') {
-      navigation.navigate('CalendarIntegrationScreen');
+    if (option === 'Schedule Availability') {
+      navigation.navigate('UserAvailabilityScreen');
     } else if (option === 'Fitness Preferences') {
       navigation.navigate('FitnessPreferenceScreen');
     } else {

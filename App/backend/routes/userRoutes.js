@@ -221,5 +221,21 @@ router.get('/recommended-program', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/program/:programId/plans', verifyToken, async (req, res) => {
+  try {
+    const { programId } = req.params;
+    const result = await pool.query(
+      `SELECT id, workout_program_id, workout_name, duration, cover_image
+       FROM workout_plan
+       WHERE workout_program_id = $1
+       ORDER BY id ASC`,  // or sort by some 'plan_order' if you have it
+      [programId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching workout plans:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 module.exports = router;
