@@ -1,320 +1,153 @@
-// App.js
 import React, { useState, useEffect } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  ActivityIndicator, 
-  TouchableOpacity, 
-  RefreshControl,
-  SafeAreaView,
-  StatusBar
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert
 } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import { ResponseType } from 'expo-auth-session';
-import Constants from 'expo-constants';
-import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
-// Register your app in Google Cloud Console to get these credentials
-// https://docs.expo.dev/guides/authentication/#google
-const CLIENT_ID = 'YOUR_CLIENT_ID';
-const REDIRECT_URI = 'YOUR_REDIRECT_URI';
+// Hardcode the days of the week you want to display
+const ALL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-// Ensure web browser redirect is handled properly
-WebBrowser.maybeCompleteAuthSession();
+export default function UserAvailabilityScreen({ navigation }) {
+  const [selectedDays, setSelectedDays] = useState([]);
 
-export default function App() {
-  const [accessToken, setAccessToken] = useState(null);
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Set up Google OAuth
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: CLIENT_ID,
-    redirectUri: REDIRECT_URI,
-    scopes: ['https://www.googleapis.com/auth/calendar.readonly'],
-    responseType: ResponseType.Token,
-  });
-
-  // Handle OAuth response
+  // On mount, fetch existing availability
   useEffect(() => {
-    if (response?.type === 'success') {
-      setAccessToken(response.authentication.accessToken);
-    } else if (response?.type === 'error') {
-      setError('Authentication failed');
-    }
-  }, [response]);
+    const fetchAvailability = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        const res = await fetch(`${API_URL}/user-availability`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-  // Get today's events when authenticated
-  useEffect(() => {
-    if (accessToken) {
-      fetchTodaysEvents();
-    }
-  }, [accessToken]);
-
-  // Format time from ISO string to readable format
-  const formatTime = (isoString) => {
-    if (!isoString) return 'All day';
-    const date = new Date(isoString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
-  // Fetch events for today
-  const fetchTodaysEvents = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Get today's date boundaries
-      const today = new Date();
-      const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-      const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-      
-      // Make API request to Google Calendar
-      const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${startOfDay}&timeMax=${endOfDay}&orderBy=startTime&singleEvents=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+        if (res.ok) {
+          const data = await res.json(); 
+          // data.available_days might be comma-separated e.g. "Mon,Wed,Fri"
+          const savedDays = data.available_days.split(',');
+          setSelectedDays(savedDays); 
+        } else if (res.status === 404) {
+          // No availability set => do nothing
+          console.log('No availability found, using empty selection');
+        } else {
+          throw new Error('Failed to fetch availability');
         }
-      );
-      
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error.message);
+      } catch (error) {
+        console.error('Error fetching availability:', error);
       }
-      
-      setEvents(data.items || []);
-    } catch (err) {
-      setError(`Failed to fetch events: ${err.message}`);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+    };
+    fetchAvailability();
+  }, []);
+
+  // Toggle a day in or out of selectedDays array
+  const toggleDay = (day) => {
+    setSelectedDays((prevSelected) => {
+      if (prevSelected.includes(day)) {
+        // remove it
+        return prevSelected.filter(d => d !== day);
+      } else {
+        // add it
+        return [...prevSelected, day];
+      }
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const res = await fetch(`${API_URL}/user-availability`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ available_days: selectedDays })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save availability');
+      }
+
+      const data = await res.json();
+      Alert.alert('Success', data.message);
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error saving availability:', error);
+      Alert.alert('Error', 'An error occurred while saving availability.');
     }
-  };
-
-  // Pull to refresh functionality
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchTodaysEvents();
-  };
-
-  // Render each event
-  const renderEvent = (event, index) => {
-    const startTime = event.start.dateTime ? formatTime(event.start.dateTime) : 'All day';
-    const endTime = event.end.dateTime ? formatTime(event.end.dateTime) : '';
-    const timeDisplay = endTime ? `${startTime} - ${endTime}` : startTime;
-    
-    return (
-      <View key={index} style={styles.eventCard}>
-        <View style={styles.eventHeader}>
-          <Text style={styles.eventTitle}>{event.summary || 'Untitled Event'}</Text>
-          <Text style={styles.eventTime}>{timeDisplay}</Text>
-        </View>
-        
-        {event.location && (
-          <View style={styles.eventDetail}>
-            <Ionicons name="location-outline" size={16} color="#666" />
-            <Text style={styles.eventLocation}>{event.location}</Text>
-          </View>
-        )}
-        
-        {event.description && (
-          <Text style={styles.eventDescription}>{event.description}</Text>
-        )}
-      </View>
-    );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Today's Schedule</Text>
-        <Text style={styles.dateText}>
-          {new Date().toLocaleDateString(undefined, { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}
-        </Text>
-      </View>
-      
-      {!accessToken ? (
-        <View style={styles.authContainer}>
-          <Text style={styles.authText}>Sign in to view your schedule</Text>
-          <TouchableOpacity 
-            style={styles.authButton} 
-            onPress={() => promptAsync()}
-            disabled={!request}
+    <View style={styles.container}>
+      <Text style={styles.title}>Select Your Available Days</Text>
+      {ALL_DAYS.map((day) => {
+        const isSelected = selectedDays.includes(day);
+        return (
+          <TouchableOpacity
+            key={day}
+            style={[styles.dayItem, isSelected && styles.dayItemSelected]}
+            onPress={() => toggleDay(day)}
           >
-            <Text style={styles.authButtonText}>Sign in with Google</Text>
+            <Text
+              style={[
+                styles.dayText,
+                isSelected && styles.dayTextSelected
+              ]}
+            >
+              {day}
+            </Text>
           </TouchableOpacity>
-        </View>
-      ) : (
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {loading && !refreshing ? (
-            <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
-          ) : error ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity 
-                style={styles.retryButton} 
-                onPress={fetchTodaysEvents}
-              >
-                <Text style={styles.retryButtonText}>Retry</Text>
-              </TouchableOpacity>
-            </View>
-          ) : events.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Ionicons name="calendar-outline" size={60} color="#ccc" />
-              <Text style={styles.emptyText}>No events scheduled for today</Text>
-            </View>
-          ) : (
-            events.map(renderEvent)
-          )}
-        </ScrollView>
-      )}
-    </SafeAreaView>
+        );
+      })}
+
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Save Availability</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  dateText: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 4,
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  authContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1, 
     padding: 20,
+    backgroundColor: '#fff'
   },
-  authText: {
-    fontSize: 18,
+  title: {
+    fontSize: 22,
     marginBottom: 20,
+    textAlign: 'center'
+  },
+  dayItem: {
+    padding: 15,
+    marginVertical: 5,
+    borderColor: '#888',
+    borderWidth: 1,
+    borderRadius: 5
+  },
+  dayItemSelected: {
+    backgroundColor: '#007bff'
+  },
+  dayText: {
+    fontSize: 16,
     textAlign: 'center',
-    color: '#666',
+    color: '#333'
   },
-  authButton: {
-    backgroundColor: '#4285F4',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+  dayTextSelected: {
+    color: '#fff'
   },
-  authButtonText: {
+  saveButton: {
+    backgroundColor: '#007bff',
+    marginTop: 30,
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5
+  },
+  saveButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  loader: {
-    marginTop: 40,
-  },
-  errorContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  errorText: {
-    color: '#d32f2f',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  retryButton: {
-    backgroundColor: '#f44336',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40,
-  },
-  emptyText: {
-    fontSize: 18,
-    color: '#999',
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  eventCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  eventHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  eventTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    flex: 1,
-  },
-  eventTime: {
-    fontSize: 14,
-    color: '#4285F4',
-    fontWeight: '500',
-  },
-  eventDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  eventLocation: {
-    fontSize: 14,
-    color: '#666',
-    marginLeft: 6,
-  },
-  eventDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 8,
-    lineHeight: 20,
-  },
+    fontWeight: 'bold'
+  }
 });
