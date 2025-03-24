@@ -1,2 +1,2 @@
 // config.js
-export const API_URL = 'https://9f30-64-203-187-234.ngrok-free.app/api';
+export const API_URL = 'https://0c41-64-203-187-197.ngrok-free.app/api';
