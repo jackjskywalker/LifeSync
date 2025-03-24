@@ -45,7 +45,6 @@ export default function HealthScreen({ navigation }) {
       keyExtractor={(item, index) => index.toString()}
       ListHeaderComponent={
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Stats Overview</Text>
           <FlatList
             data={healthData}
             renderItem={renderHealthItem}
