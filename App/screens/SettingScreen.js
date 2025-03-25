@@ -64,12 +64,27 @@ export default function SettingsScreen({ navigation }) {
 
   // Handle navigation based on settings item pressed
   const handleOptionPress = (option) => {
-    if (option === 'Schedule Availability') {
-      navigation.navigate('UserAvailabilityScreen');
-    } else if (option === 'Fitness Preferences') {
-      navigation.navigate('FitnessPreferenceScreen');
-    } else {
-      Alert.alert('Selected Option', option);
+    switch (option) {
+      case 'Calendar Integration':
+        navigation.navigate('CalendarIntegrationScreen');
+        break;
+      case 'Notifications':
+        navigation.navigate('NotificationScreen');
+        break;
+      case 'Terms & Conditions':
+        navigation.navigate('TermsAndConditionsScreen');
+        break;
+      case 'Privacy & Security':
+        navigation.navigate('PrivacyAndSecurityScreen');
+        break;
+      case 'Help Center':
+        navigation.navigate('HelpCenterScreen');
+        break;
+      case 'Account Profile':
+        navigation.navigate('AccountProfileScreen');
+        break;
+      default:
+        Alert.alert('Selected Option', option);
     }
   };
 
@@ -80,7 +95,7 @@ export default function SettingsScreen({ navigation }) {
           <MaterialIcons name="person" size={50} color="gray" />
         </View>
         <TouchableOpacity style={styles.editIcon}>
-          <MaterialIcons name="edit" size={24} color="#007bff" />
+          <MaterialIcons name="edit" size={24} color="#0690FF" />
         </TouchableOpacity>
         <Text style={styles.name}>{name || 'User Name'}</Text>
         <Text style={styles.username}>{email || 'user@example.com'}</Text>
@@ -145,7 +160,7 @@ const styles = StyleSheet.create({
   optionText: { fontSize: 16 },
   separator: { height: 1, backgroundColor: '#ccc' },
   logoutButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#0690FF',
     padding: 15,
     alignItems: 'center',
   },

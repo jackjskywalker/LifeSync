@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5, //also remove if doesnt work
     borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
     zIndex: 10, // Ensure this is on top
     backgroundColor: '#0690FF',
 
@@ -247,7 +248,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 10,
-    borderRadius: 5,
     borderRadius: 5,
   },
   workoutInfo: {
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
   loadMoreText: {
     color: '#f8f9fc',
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: 600,
     letterSpacing: 0.5,
     textAlign: 'center',
   },
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingVertical: 15,
     borderRadius: 40,
-    padding: 5,
+    padding: '5',
   },
   dayBox: {
     width: 40,
