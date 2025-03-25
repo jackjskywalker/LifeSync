@@ -21,53 +21,167 @@ import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import UserAvailabilityScreen from './screens/UserAvailabilityScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
-import NotificationScreen from './screens/NotificationScreen';
+import CalendarIntegrationScreen from './screens/CalendarIntegrationScreen';
+import NotificationScreen from './screens/NotificationScreen';  
 import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
 import PrivacyAndSecurityScreen from './screens/PrivacyAndSecurityScreen';
 import HelpCenterScreen from './screens/HelpCenterScreen';
 import AccountProfileScreen from './screens/AccountProfileScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// 1) Fitness Stack: holds screens for the Fitness tab
-const FitnessStackNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Fitness"
-      component={FitnessScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen name="WorkoutRoutine" component={WorkoutRoutineScreen} />
-    <Stack.Screen name="WorkoutDetail" component={WorkoutDetailScreen} />
-    <Stack.Screen name="ExerciseDetail" component={ExerciseDetailScreen} />
-  </Stack.Navigator>
+// 1) Dashboard Stack
+const DashboardStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="Dashboard"
+            component={DashboardScreen}
+            options={{
+                headerShown: true,
+                title: 'Dashboard',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
 );
 
-// 2) Health Stack: holds screens for the Health tab
-const HealthStackNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Health"
-      component={HealthScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
-  </Stack.Navigator>
+// 2) Recommended Program Stack
+const RecommendedProgramStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="RecommendedProgram"
+            component={RecommendedProgramScreen}
+            options={{
+                headerShown: true,
+                title: 'Recommended Program',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
 );
 
-// 3) Settings Stack: holds SettingsScreen + CalendarIntegrationScreen
-const SettingsStackNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="SettingsMain"
-      component={SettingsScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
+// 3) Nutrition Stack (formerly Health)
+const NutritionStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="NutritionMain"
+            component={HealthScreen}
+            options={{
+                headerShown: true,
+                title: 'Nutrition',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+        <Stack.Screen
+            name="RecipeDetail"
+            component={RecipeDetailScreen}
+            options={{
+                headerShown: true,
+                title: 'Recipe Detail',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
+);
+
+// 4) Schedule Stack
+const ScheduleStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="ScheduleMain"
+            component={ScheduleScreen}
+            options={{
+                headerShown: true,
+                title: 'Schedule',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
+);
+
+// 5) Profile Stack (formerly Settings)
+const ProfileStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="ProfileMain"
+            component={SettingsScreen}
+            options={{
+                headerShown: true,
+                title: 'Profile',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+        <Stack.Screen
+            name="UserAvailabilityScreen"
+            component={UserAvailabilityScreen}
+            options={{
+                headerShown: true,
+                title: 'User Availability',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+        <Stack.Screen
+            name="FitnessPreferenceScreen"
+            component={FitnessPreferenceScreen}
+            options={{
+                headerShown: true,
+                title: 'Fitness Preference',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+
+<Stack.Screen
       name="CalendarIntegrationScreen"
       component={CalendarIntegrationScreen}
     />
@@ -91,10 +205,10 @@ const SettingsStackNavigator = () => (
       name = "AccountProfileScreen"
       component={AccountProfileScreen}
     />
-  </Stack.Navigator>
+    </Stack.Navigator>
 );
 
-// 4) Main Tab Navigator
+// 6) Main Tab Navigator
 const MainTabNavigator = () => (
     <Tab.Navigator
         screenOptions={({ route }) => ({
