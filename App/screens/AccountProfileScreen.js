@@ -17,6 +17,7 @@ const AccountProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState(''); // Add state for current password
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -51,6 +52,7 @@ const AccountProfileScreen = ({ navigation }) => {
         const data = await response.json();
         setName(data.name);
         setEmail(data.email);
+        setCurrentPassword(data.password); // Store the current password
       } catch (error) {
         console.error('Failed to load user data:', error);
       }
@@ -60,50 +62,47 @@ const AccountProfileScreen = ({ navigation }) => {
   }, []);
 
   const handleUpdateProfile = async () => {
-    // Ensure all fields are filled
-    if (!name || !email) {
-      Alert.alert('Error', 'Name and Email are required');
+    if (!name && !email && !password) {
+      Alert.alert('Error', 'At least one field must be filled to update');
       return;
     }
   
     try {
-      // Get the token from AsyncStorage (ensure it's saved after login)
       const token = await AsyncStorage.getItem('userToken');
       if (!token) {
         throw new Error('User not authenticated');
       }
   
-      // Create a new FormData object to handle file upload
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
+      const body = {};
+      if (name) body.name = name;
+      if (email) body.email = email;
       if (password) {
-        formData.append('password', password);
+        body.password = password; // Only include password if it is provided
       }
   
-      // Send a PUT request to update the profile (use the correct endpoint)
+      console.log('Request Payload:', body); // Debugging log
+      console.log('Token:', token); // Debugging log
+  
       const response = await fetch(`${API_URL}/updateProfile`, {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`, // Attach the token to authenticate
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        body: formData, // Use FormData as the body
+        body: JSON.stringify(body),
       });
   
-      // Parse the response as JSON
-      const data = await response.json();
-  
-      // If the request is not successful, throw an error
       if (!response.ok) {
-        throw new Error(data.error || 'Profile update failed. Please try again.');
+        const errorData = await response.json().catch(() => null);
+        const errorMessage = errorData?.error || 'Profile update failed. Please try again.';
+        console.error('Backend Error:', errorMessage); // Debugging log
+        throw new Error(errorMessage);
       }
   
-      // Show success alert and navigate if needed
       Alert.alert('Success', 'Profile updated successfully', [
-        { text: 'OK', onPress: () => navigation.goBack() }, // Navigate back after successful update
+        { text: 'OK', onPress: () => navigation.goBack() },
       ]);
     } catch (error) {
-      // Catch and log errors, show an alert for failure
       console.error('Profile Update Error:', error);
       Alert.alert('Error', error.message || 'An error occurred');
     }
