@@ -6,9 +6,23 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
+  // Jacob: validate email format
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
   const handleResetPassword = () => {
-    // Implement password reset logic here (e.g., send reset link to email)
-    setError('Password reset link sent to your email');
+    if (!email) {
+      setError('Please enter your email address');
+      return;
+    }
+
+    // Jacob: validate email format
+    if (!validateEmail(email)) {
+      setError('Invalid email address');
+      return;
+    }
   };
 
   return (

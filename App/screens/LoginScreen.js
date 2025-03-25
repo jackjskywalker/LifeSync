@@ -33,11 +33,34 @@ const LoginScreen = ({ navigation }) => {
     }).start();
   }, []);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
-      return;
-    }
+    // Jacob: validate email format
+    const validateEmail = (email) => {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    };
+  
+    // Jacob: validate password strength
+    const validatePassword = (password) => {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return passwordRegex.test(password);
+    };
+  
+    const handleLogin = async () => {
+      if (!email || !password) {
+        Alert.alert('Error', 'Please enter both email and password');
+        return;
+      }
+      // Jacob: validate email format
+      if (!validateEmail(email)) {
+        Alert.alert('Error', 'Invalid email address');
+        return;
+      }  
+
+      // Jacob: validate password strength
+      if (!validatePassword(password)) {
+        Alert.alert('Error', 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character');
+        return;
+      }
 
     try {
       const response = await fetch(`${API_URL}/login`, {
