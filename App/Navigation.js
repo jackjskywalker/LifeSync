@@ -22,6 +22,12 @@ import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import UserAvailabilityScreen from './screens/UserAvailabilityScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 
+import NotificationScreen from './screens/NotificationScreen';  
+import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
+import PrivacyAndSecurityScreen from './screens/PrivacyAndSecurityScreen';
+import HelpCenterScreen from './screens/HelpCenterScreen';
+import AccountProfileScreen from './screens/AccountProfileScreen';
+
 export const AuthContext = createContext();
 
 const Stack = createStackNavigator();
@@ -36,6 +42,27 @@ const DashboardStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Dashboard',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
+);
+
+// 2) Recommended Program Stack
+const RecommendedProgramStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="RecommendedProgram"
+            component={RecommendedProgramScreen}
+            options={{
+                headerShown: true,
+                title: 'Recommended Program',
                 headerStyle: {
                     backgroundColor: '#f8f9fc',
                 },
@@ -174,6 +201,31 @@ const ProfileStackNavigator = () => (
                 },
             }}
         />
+
+<Stack.Screen
+      name="CalendarIntegrationScreen"
+      component={CalendarIntegrationScreen}
+    />
+    <Stack.Screen
+      name = "NotificationScreen"
+      component={NotificationScreen}
+    />
+    <Stack.Screen
+      name = "TermsAndConditionsScreen"
+      component={TermsAndConditionsScreen}
+    />
+    <Stack.Screen
+      name = "PrivacyAndSecurityScreen"
+      component={PrivacyAndSecurityScreen}
+    />
+    <Stack.Screen
+      name = "HelpCenterScreen"
+      component={HelpCenterScreen}
+    />
+    <Stack.Screen
+      name = "AccountProfileScreen"
+      component={AccountProfileScreen}
+    />
     </Stack.Navigator>
 );
 

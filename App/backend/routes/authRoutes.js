@@ -1,8 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
+const { register, login, updateProfile } = require('../controllers/authController');
+const authenticate = require('../middleware/authenticate'); // Middleware to verify JWT
 
-router.post('/register', authController.register);
-router.post('/login', authController.login); 
+const router = express.Router();
+
+router.post('/register', register);
+router.post('/login', login); 
+router.put('/updateProfile', authenticate, updateProfile);
 
 module.exports = router;
