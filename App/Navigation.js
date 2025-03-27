@@ -21,7 +21,7 @@ import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import UserAvailabilityScreen from './screens/UserAvailabilityScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
-import CalendarIntegrationScreen from './screens/CalendarIntegrationScreen';
+
 import NotificationScreen from './screens/NotificationScreen';  
 import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
 import PrivacyAndSecurityScreen from './screens/PrivacyAndSecurityScreen';
@@ -42,6 +42,27 @@ const DashboardStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Dashboard',
+                headerStyle: {
+                    backgroundColor: '#f8f9fc',
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    color: '#333',
+                },
+            }}
+        />
+    </Stack.Navigator>
+);
+
+// 2) Recommended Program Stack
+const RecommendedProgramStackNavigator = () => (
+    <Stack.Navigator>
+        <Stack.Screen
+            name="RecommendedProgram"
+            component={RecommendedProgramScreen}
+            options={{
+                headerShown: true,
+                title: 'Recommended Program',
                 headerStyle: {
                     backgroundColor: '#f8f9fc',
                 },
