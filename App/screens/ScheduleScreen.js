@@ -12,7 +12,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 
-// All 7 days, in order
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export default function RecommendedScheduleScreen() {
@@ -25,10 +24,8 @@ export default function RecommendedScheduleScreen() {
     const fetchScheduleData = async () => {
       try {
         setLoading(true);
-
         const token = await AsyncStorage.getItem('userToken');
 
-        // 1) Fetch recommended program
         let response = await fetch(`${API_URL}/recommended-program`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -39,27 +36,22 @@ export default function RecommendedScheduleScreen() {
           throw new Error('Failed to fetch recommended program');
         }
         let data = await response.json();
-        const program = data.program; 
-        setRecommendedProgram(program);
+        setRecommendedProgram(data.program);
 
-        // 2) Fetch user availability
         response = await fetch(`${API_URL}/user-availability`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.ok) {
           const availData = await response.json();
-          // e.g. "Mon,Tue,Thu,Fri"
           const days = availData.available_days ? availData.available_days.split(',') : [];
-          setAvailability(days); 
+          setAvailability(days);
         } else if (response.status === 404) {
-          // No availability set
           console.log('No availability found; user has not selected days.');
         } else {
           throw new Error('Failed to fetch availability');
         }
 
-        // 3) Fetch workout plans for the recommended program
-        response = await fetch(`${API_URL}/program/${program.id}/plans`, {
+        response = await fetch(`${API_URL}/program/${data.program.id}/plans`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -95,36 +87,37 @@ export default function RecommendedScheduleScreen() {
     );
   }
 
-  // If we have recommendedProgram, availability, and plans, let's map them to a schedule.
-  // We'll keep an index to the current workout plan in `plans`.
+  const today = new Date().toLocaleString('en-US', { weekday: 'long' });
   let planIndex = 0;
   const schedule = DAYS_OF_WEEK.map((day) => {
-    const isAvailable = availability.includes(day.slice(0,3)); 
-    // e.g. user might store "Mon" for Monday, 
-    // but if you stored full "Monday", just match them exactly or do a mapping
+    const isAvailable = availability.includes(day.slice(0, 3));
 
     if (isAvailable && planIndex < plans.length) {
-      // Assign the next workout plan
       const nextPlan = plans[planIndex];
       planIndex++;
       return { day, workoutName: nextPlan.workout_name };
     } else {
-      // Mark as Rest day
       return { day, workoutName: 'Rest' };
     }
   });
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>My Weekly Schedule</Text>
+      <Text style={styles.title}>Current Program</Text>
       <Text style={styles.subtitle}>
-        Program: {recommendedProgram.name} ({recommendedProgram.number_of_workout_days}-Day)
+        {recommendedProgram.name} ({recommendedProgram.number_of_workout_days}-Day)
       </Text>
 
       {schedule.map((entry, idx) => (
-        <View key={idx} style={styles.dayContainer}>
-          <Text style={styles.dayText}>{entry.day}:</Text>
-          <Text style={styles.workoutText}>{entry.workoutName}</Text>
+        <View
+          key={idx}
+          style={[
+            styles.dayContainer,
+            entry.day === today && styles.currentDayContainer
+          ]}
+        >
+          <Text style={[styles.dayText, entry.day === today && styles.currentDayText]}>{entry.day}:</Text>
+          <Text style={[styles.workoutText, entry.day === today && styles.currentWorkoutText]}>{entry.workoutName}</Text>
         </View>
       ))}
     </ScrollView>
@@ -133,38 +126,74 @@ export default function RecommendedScheduleScreen() {
 
 const styles = StyleSheet.create({
   loadingContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     padding: 16
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
+    textAlign: 'center',
     fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center'
+    backgroundColor: '#fff',
+    paddingTop: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   subtitle: {
     fontSize: 16,
-    color: '#555',
+    color: 'black',
+    backgroundColor: '#fff',
+    padding: 10,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   dayContainer: {
     flexDirection: 'row',
     marginVertical: 8,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#0690FF',
+    padding: 15,
+    borderRadius: 30,
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+  },
+  currentDayContainer: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   dayText: {
     fontSize: 16,
     fontWeight: 'bold',
-    width: 100
+    width: 100,
+    color: '#fff',
+  },
+  currentDayText: {
+    color: '#0690FF',
   },
   workoutText: {
-    fontSize: 16
+    fontSize: 16,
+    color: '#fff',
+  },
+  currentWorkoutText: {
+    color: '#0690FF',
   }
 });
