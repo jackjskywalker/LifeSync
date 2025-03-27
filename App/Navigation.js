@@ -21,6 +21,12 @@ import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import UserAvailabilityScreen from './screens/UserAvailabilityScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
+import CalendarIntegrationScreen from './screens/CalendarIntegrationScreen';
+import NotificationScreen from './screens/NotificationScreen';  
+import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
+import PrivacyAndSecurityScreen from './screens/PrivacyAndSecurityScreen';
+import HelpCenterScreen from './screens/HelpCenterScreen';
+import AccountProfileScreen from './screens/AccountProfileScreen';
 
 export const AuthContext = createContext();
 
@@ -174,6 +180,31 @@ const ProfileStackNavigator = () => (
                 },
             }}
         />
+
+<Stack.Screen
+      name="CalendarIntegrationScreen"
+      component={CalendarIntegrationScreen}
+    />
+    <Stack.Screen
+      name = "NotificationScreen"
+      component={NotificationScreen}
+    />
+    <Stack.Screen
+      name = "TermsAndConditionsScreen"
+      component={TermsAndConditionsScreen}
+    />
+    <Stack.Screen
+      name = "PrivacyAndSecurityScreen"
+      component={PrivacyAndSecurityScreen}
+    />
+    <Stack.Screen
+      name = "HelpCenterScreen"
+      component={HelpCenterScreen}
+    />
+    <Stack.Screen
+      name = "AccountProfileScreen"
+      component={AccountProfileScreen}
+    />
     </Stack.Navigator>
 );
 
