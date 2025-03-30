@@ -6,20 +6,26 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Screens
+// Main Navigation
 import DashboardScreen from './screens/Dashboard';
-import RecommendedProgramScreen from './screens/CurrentProgram';
 import HealthScreen from './screens/Nutrition';
-import SettingsScreen from './screens/UserProfile';
-import FitnessPreferenceScreen from './screens/profile/FitnessPreferenceScreen';
-import LoginScreen from './screens/login/Login';
-import RegisterScreen from './screens/login/Register';
-import ForgotPasswordScreen from './screens/login/ForgotPassword';
-import RecipeDetailScreen from './screens/Recipe';
-import UserAvailabilityScreen from './screens/profile/UserAvailabilityScreen';
 import ScheduleScreen from './screens/Schedule';
+import SettingsScreen from './screens/UserProfile';
 
-// Newly added screens in the settings/profile section
+// Specialized Screens
+import RecipeDetailScreen from './screens/Recipe';
+import RecommendedProgramScreen from './screens/CurrentProgram';
+
+// Authentication
+import LoginScreen from './screens/auth/Login';
+import RegisterScreen from './screens/auth/Register';
+import ForgotPasswordScreen from './screens/auth/Recovery';
+
+// Preference Settings
+import FitnessPreferenceScreen from './screens/profile/FitnessPreferenceScreen';
+import UserAvailabilityScreen from './screens/profile/UserAvailabilityScreen';
+
+// Profile Page
 import AccountProfileScreen from './screens/profile/AccountProfileScreen';
 import NotificationScreen from './screens/profile/NotificationScreen';
 import PrivacyAndSecurityScreen from './screens/profile/PrivacyAndSecurityScreen';

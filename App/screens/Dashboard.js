@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   currentPlanBox: {
-    height: 120,
+    height: 100,
     backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
