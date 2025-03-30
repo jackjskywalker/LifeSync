@@ -14,7 +14,7 @@ import SettingsScreen from './screens/UserProfile';
 
 // Specialized Screens
 import RecipeDetailScreen from './screens/Recipe';
-import RecommendedProgramScreen from './screens/CurrentProgram';
+import RecommendedProgramScreen from './screens/content/CurrentProgram';
 
 // Authentication
 import LoginScreen from './screens/auth/Login';
