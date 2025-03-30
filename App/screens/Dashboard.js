@@ -23,6 +23,9 @@ const quotes = [
   "Success usually comes to those who are too busy to be looking for it.",
 ];
 
+const COMMON_RADIUS = 10;
+const COMMON_PADDING = 20;
+
 // ==================
 // STATS SCREEN CODE
 // (unchanged content, only placed here)
@@ -107,18 +110,18 @@ function StatsScreen({ navigation }) {
   );
 }
 
-// StatsScreen Styles (unchanged, just renamed to `statsStyles` internally)
+// StatsScreen Styles
 const statsStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   headerContainer: {
-    padding: 20,
+    padding: COMMON_PADDING,
     backgroundColor: '#fff',
   },
   footerContainer: {
-    padding: 20,
+    padding: COMMON_PADDING,
     backgroundColor: '#fff',
   },
   title: {
@@ -149,7 +152,7 @@ const statsStyles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
     backgroundColor: '#0690FF',
-    borderRadius: 20,
+    borderRadius: COMMON_RADIUS * 2,
     alignItems: 'center',
   },
   toggleGoalsText: {
@@ -158,9 +161,9 @@ const statsStyles = StyleSheet.create({
   },
   goalContainer: {
     marginVertical: 15,
-    padding: 20,
+    padding: COMMON_PADDING,
     backgroundColor: '#f7f7f7',
-    borderRadius: 10,
+    borderRadius: COMMON_RADIUS,
   },
   goalTitle: {
     fontSize: 18,
@@ -290,10 +293,11 @@ const DashboardScreen = () => {
 
   const renderQuoteBox = () => (
     <ImageBackground
-      source={require('../assets/Images/istockphoto-1681619429-612x612.jpg')}
+      source={require('../assets/Images/landing.jpg')}
       style={styles.quoteBox}
       imageStyle={styles.quoteBackgroundImage}
     >
+      <View style={styles.quoteOverlay} />
       <Text style={styles.quoteText}>{quote}</Text>
     </ImageBackground>
   );
@@ -315,7 +319,7 @@ const DashboardScreen = () => {
         onPress={() => navigation.navigate('RecommendedProgram')}
       >
         <Image
-          source={require('../assets/Images/istockphoto-1681619429-612x612.jpg')}
+          source={require('../assets/Images/fit1.jpg')}
           style={styles.currentPlanImage}
         />
         <View style={styles.currentPlanTextContainer}>
@@ -345,7 +349,7 @@ const DashboardScreen = () => {
 // ==============
 const styles = StyleSheet.create({
   contentContainer: {
-    padding: 20,
+    padding: COMMON_PADDING,
     paddingTop: 12,
   },
   daysOfWeekContainer: {
@@ -356,16 +360,17 @@ const styles = StyleSheet.create({
   dayCircle: {
     width: 45,
     height: 45,
-    borderRadius: 25,
+    borderRadius: 22.5, // exactly half of the width/height
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 2,
   },
   currentDayCircle: {
     backgroundColor: '#007bff',
+    borderColor: '#007bff',
   },
   defaultDayCircle: {
-    backgroundColor: '#fff',
-    borderWidth: 4,
+    backgroundColor: 'transparent',
     borderColor: '#007bff',
   },
   dayText: {
@@ -378,25 +383,30 @@ const styles = StyleSheet.create({
     color: '#007bff',
   },
   quoteBox: {
-    height: 120,
+    height: 165,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    borderRadius: 5,
+    borderRadius: COMMON_RADIUS,
     padding: 10,
-    overflow: 'hidden', // Ensure rounded corners are applied to the background image
+    overflow: 'hidden', // ensures rounded corners are applied to the background image and overlay
   },
   quoteBackgroundImage: {
-    borderRadius: 5,
-    resizeMode: 'stretch', // Ensures the image covers the entire box
+    borderRadius: COMMON_RADIUS,
+    resizeMode: 'cover',
+  },
+  quoteOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: COMMON_RADIUS,
   },
   quoteText: {
     fontSize: 16,
     fontStyle: 'italic',
     textAlign: 'center',
-    color: '#fff', // Assuming the background image has a dark color, we use white text
-    paddingHorizontal: 10, // Add some padding to prevent text from touching the edges
-    fontWeight: 'bold', // Make the text bold
+    color: '#fff',
+    paddingHorizontal: 10,
+    fontWeight: 'bold',
   },
   greeting: {
     fontSize: 24,
@@ -417,13 +427,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    borderRadius: 5,
+    borderRadius: COMMON_RADIUS,
     padding: 10,
   },
   currentPlanImage: {
     width: 80,
     height: 80,
-    borderRadius: 5,
+    borderRadius: COMMON_RADIUS,
     marginRight: 10,
   },
   currentPlanTextContainer: {
@@ -433,12 +443,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
     fontWeight: 'bold',
-  },
-  currentPlanContent: {
-    flex: 1,
-    backgroundColor: '#f8f9fc',
-    width: '100%',
-    borderRadius: 5,
   },
   statsTitle: {
     fontSize: 20,
@@ -450,7 +454,7 @@ const styles = StyleSheet.create({
   statsBox: {
     flex: 1,
     backgroundColor: '#f8f9fc',
-    borderRadius: 5,
+    borderRadius: COMMON_RADIUS,
     padding: 10,
   },
 });

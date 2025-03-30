@@ -99,7 +99,7 @@ export default function SettingsScreen({ navigation }) {
                 </View>
                 <Text style={styles.name}>{name || 'User Name'}</Text>
                 <View style={styles.emailRow}>
-                    <MaterialIcons name="alternate-email" size={16} color="#e0e0e0" />
+                    {/* Removed the @ icon here */}
                     <Text style={styles.emailText}>
                         {email || 'user@example.com'}
                     </Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     profileContainer: {
         backgroundColor: '#007bff',
         alignItems: 'center',
-        paddingVertical: 30,
+        paddingVertical: 35,  // increased from 30 to 50 for a taller header
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         marginBottom: 20,

@@ -17,7 +17,7 @@ const AccountProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [currentPassword, setCurrentPassword] = useState(''); // Add state for current password
+  const [currentPassword, setCurrentPassword] = useState('');
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const AccountProfileScreen = ({ navigation }) => {
         const data = await response.json();
         setName(data.name);
         setEmail(data.email);
-        setCurrentPassword(data.password); // Store the current password
+        setCurrentPassword(data.password);
       } catch (error) {
         console.error('Failed to load user data:', error);
       }
@@ -76,12 +76,10 @@ const AccountProfileScreen = ({ navigation }) => {
       const body = {};
       if (name) body.name = name;
       if (email) body.email = email;
-      if (password) {
-        body.password = password; // Only include password if it is provided
-      }
+      if (password) body.password = password;
   
-      console.log('Request Payload:', body); // Debugging log
-      console.log('Token:', token); // Debugging log
+      console.log('Request Payload:', body);
+      console.log('Token:', token);
   
       const response = await fetch(`${API_URL}/updateProfile`, {
         method: 'PUT',
@@ -95,7 +93,7 @@ const AccountProfileScreen = ({ navigation }) => {
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         const errorMessage = errorData?.error || 'Profile update failed. Please try again.';
-        console.error('Backend Error:', errorMessage); // Debugging log
+        console.error('Backend Error:', errorMessage);
         throw new Error(errorMessage);
       }
   
@@ -111,7 +109,7 @@ const AccountProfileScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <StatusBar barStyle="dark-content" />
       <Animated.View style={[styles.innerContainer, { opacity: fadeAnim }]}>
@@ -153,7 +151,10 @@ const AccountProfileScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#f8f9fc',
+  },
   innerContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginVertical: 5,
-    backgroundColor: '#f8f9fc',
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#00000060',
   },
