@@ -1,4 +1,4 @@
-// App.js
+// App.js by Jack Skywalker
 import React from 'react';
 import Navigation from './Navigation';
 

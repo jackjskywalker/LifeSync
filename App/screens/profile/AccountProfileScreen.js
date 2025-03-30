@@ -1,3 +1,5 @@
+// by Sam Linnemann
+
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Text, 

@@ -1,3 +1,5 @@
+// by Sam Linnemann
+
 import React, { useEffect } from 'react';
 import {
   View,

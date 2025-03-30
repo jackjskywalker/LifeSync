@@ -1,3 +1,5 @@
+// by Sam Linnemann
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';

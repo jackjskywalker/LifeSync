@@ -1,3 +1,4 @@
+// Dashboard.js by Morgan Chandler edited by Jack Skywalker
 import React, { useEffect, useState } from 'react';
 import {
   View,

@@ -1,3 +1,4 @@
+// by Jack Skywalker
 import React, { useState, useCallback, useEffect } from 'react';
 import {
     View,
@@ -224,7 +225,7 @@ export default function RecommendedProgramScreen({ navigation }) {
                 style={styles.goBackButton}
                 onPress={() => navigation.goBack()}
             >
-                <Text style={styles.goBackText}>Go Back</Text>
+                <Text style={styles.goBackText}>Update Fitness Preference</Text>
             </TouchableOpacity>
         </ScrollView>
     );

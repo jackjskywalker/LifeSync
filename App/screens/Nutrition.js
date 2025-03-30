@@ -1,3 +1,5 @@
+// Nutrition.js by Morgan Chandler edited by Jack Skywalker
+
 import React, { useState } from 'react';
 import {
   View,
@@ -9,9 +11,6 @@ import {
   ScrollView,
 } from 'react-native';
 
-// -------------------------------------------------------------------------
-// DUMMY DATA
-// -------------------------------------------------------------------------
 const recipes = {
   'Muscle Gain': [
     { id: '1', title: 'Zucchini Noodles with Pesto', time: '45 Minutes', difficulty: 'Medium', price: '$', imageUri: require('../assets/Images/zucchini noodles with pesto.jpg') },
