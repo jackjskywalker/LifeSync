@@ -7,20 +7,24 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Screens
-import DashboardScreen from './screens/DashboardScreen';
-import RecommendedProgramScreen from './screens/RecommendedProgramScreen';
-import HealthScreen from './screens/HealthScreen';
-import SettingsScreen from './screens/SettingScreen';
-import FitnessPreferenceScreen from './screens/FitnessPreferenceScreen';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
-import WorkoutRoutineScreen from './screens/WorkoutRoutineScreen';
-import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
-import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
-import RecipeDetailScreen from './screens/RecipeDetailScreen';
-import UserAvailabilityScreen from './screens/UserAvailabilityScreen';
-import ScheduleScreen from './screens/ScheduleScreen';
+import DashboardScreen from './screens/Dashboard';
+import RecommendedProgramScreen from './screens/CurrentProgram';
+import HealthScreen from './screens/Nutrition';
+import SettingsScreen from './screens/UserProfile';
+import FitnessPreferenceScreen from './screens/profile/FitnessPreferenceScreen';
+import LoginScreen from './screens/login/Login';
+import RegisterScreen from './screens/login/Register';
+import ForgotPasswordScreen from './screens/login/ForgotPassword';
+import RecipeDetailScreen from './screens/Recipe';
+import UserAvailabilityScreen from './screens/profile/UserAvailabilityScreen';
+import ScheduleScreen from './screens/Schedule';
+
+// Newly added screens in the settings/profile section
+import AccountProfileScreen from './screens/profile/AccountProfileScreen';
+import NotificationScreen from './screens/profile/NotificationScreen';
+import PrivacyAndSecurityScreen from './screens/profile/PrivacyAndSecurityScreen';
+import TermsAndConditionsScreen from './screens/profile/TermsAndConditionsScreen';
+import HelpCenterScreen from './screens/profile/HelpCenterScreen';
 
 export const AuthContext = createContext();
 
@@ -36,13 +40,8 @@ const DashboardStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Dashboard',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
     </Stack.Navigator>
@@ -57,13 +56,8 @@ const RecommendedProgramStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Recommended Program',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
     </Stack.Navigator>
@@ -78,13 +72,8 @@ const NutritionStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Nutrition',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
         <Stack.Screen
@@ -93,13 +82,8 @@ const NutritionStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Recipe Detail',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
     </Stack.Navigator>
@@ -114,19 +98,15 @@ const ScheduleStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Schedule',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
     </Stack.Navigator>
 );
 
 // 5) Profile Stack (formerly Settings)
+// The updated stack now includes additional screens.
 const ProfileStackNavigator = () => (
     <Stack.Navigator>
         <Stack.Screen
@@ -135,13 +115,18 @@ const ProfileStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Profile',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
+            }}
+        />
+        <Stack.Screen
+            name="AccountProfile"
+            component={AccountProfileScreen}
+            options={{
+                headerShown: true,
+                title: 'Account Profile',
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
         <Stack.Screen
@@ -150,13 +135,8 @@ const ProfileStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'User Availability',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
         <Stack.Screen
@@ -165,13 +145,48 @@ const ProfileStackNavigator = () => (
             options={{
                 headerShown: true,
                 title: 'Fitness Preference',
-                headerStyle: {
-                    backgroundColor: '#f8f9fc',
-                },
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    color: '#333',
-                },
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
+            }}
+        />
+        <Stack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
+            options={{
+                headerShown: true,
+                title: 'Notifications',
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
+            }}
+        />
+        <Stack.Screen
+            name="PrivacyAndSecurityScreen"
+            component={PrivacyAndSecurityScreen}
+            options={{
+                headerShown: true,
+                title: 'Privacy & Security',
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
+            }}
+        />
+        <Stack.Screen
+            name="TermsAndConditionsScreen"
+            component={TermsAndConditionsScreen}
+            options={{
+                headerShown: true,
+                title: 'Terms & Conditions',
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
+            }}
+        />
+        <Stack.Screen
+            name="HelpCenterScreen"
+            component={HelpCenterScreen}
+            options={{
+                headerShown: true,
+                title: 'Help Center',
+                headerStyle: { backgroundColor: '#f8f9fc' },
+                headerTitleStyle: { fontWeight: 'bold', color: '#333' },
             }}
         />
     </Stack.Navigator>
@@ -181,7 +196,7 @@ const ProfileStackNavigator = () => (
 const MainTabNavigator = () => (
     <Tab.Navigator
         screenOptions={({ route }) => ({
-            headerShown: false, // Hide header for tab screens
+            headerShown: false,
             tabBarIcon: ({ color, size }) => {
                 let iconName;
                 if (route.name === 'Dashboard') {
@@ -224,7 +239,7 @@ const Navigation = () => {
     }, []);
 
     if (loading) {
-        return null; // or a loading spinner
+        return null;
     }
 
     return (
@@ -241,13 +256,8 @@ const Navigation = () => {
                                     options={{
                                         headerShown: true,
                                         title: 'Recommended Program',
-                                        headerStyle: {
-                                            backgroundColor: '#f8f9fc',
-                                        },
-                                        headerTitleStyle: {
-                                            fontWeight: 'bold',
-                                            color: '#333',
-                                        },
+                                        headerStyle: { backgroundColor: '#f8f9fc' },
+                                        headerTitleStyle: { fontWeight: 'bold', color: '#333' },
                                     }}
                                 />
                             </>

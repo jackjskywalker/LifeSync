@@ -1,84 +1,86 @@
-// RegisterScreen.js
-import React, { useState, useRef, useEffect } from 'react';
+// LoginScreen.js
+
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import {
   View,
-  Image,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
-  StatusBar, //Imported for light theme
-  Appearance,
+  StatusBar,
+  Appearance, //Imported for light theme
   Animated, //Imported for fade in animation
 } from 'react-native';
-import { API_URL } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../../Navigation';
+import { API_URL } from '../../config';
 
-const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
+const LoginScreen = ({ navigation }) => {
+  const { setIsAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  
+
   useEffect(() => {
-  Animated.timing(fadeAnim, {
+    Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 800,
       useNativeDriver: true,
     }).start();
   }, []);
 
-  const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert('Error', 'All fields are required');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Registration failed. Please try again.');
+        throw new Error(data.error || 'Login failed. Please try again.');
       }
 
-      Alert.alert('Success', 'Registration successful', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') },
-      ]);
+      // Store token and user name
+      await AsyncStorage.setItem('userToken', data.token);
+      await AsyncStorage.setItem('userName', data.name);
+
+      // Update auth state
+      setIsAuthenticated(true);
+
+      // Navigate to the main app screen
+      navigation.navigate('Home'); // Replace 'Home' with your home screen name
+
     } catch (error) {
-      console.error('Registration Error:', error);
+      console.error('Login Error:', error);
       Alert.alert('Error', error.message || 'An error occurred');
     }
   };
 
-    // Changing phone theme to light so that time and other top bar information appears black (Sam)
-    Appearance.setColorScheme('light');
+  // Changing phone theme to light so that time and other top bar information appears black (Sam)
+  Appearance.setColorScheme('light');
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <StatusBar barStyle="dark-content" />
       <Animated.View style={[styles.innerContainer, {opacity: fadeAnim}]}>
-        <Image source={require('../assets/lightLogo1.png')} style={styles.logo} />
-        <Text style={styles.title}>Register</Text>
-        
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          onChangeText={setName}
-          value={name}
-          autoCapitalize="words"
-          placeholderTextColor="#00000060"
-        />
+        <Image source={require('../../assets/lightLogo1.png')} style={styles.logo} /> 
+        <Text style={styles.title}>LifeSync<Text style={styles.titleAccent}>+</Text></Text>
+        <Text style={styles.secondaryTitle}>Health + Fitness</Text>
 
         <TextInput
           style={styles.input}
@@ -100,13 +102,17 @@ const RegisterScreen = ({ navigation }) => {
           placeholderTextColor="#00000060"
         />
 
-        <TouchableOpacity style={styles.registerBtn} onPress={handleRegister}>
-          <Text style={styles.registerBtnText}>Register</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.forgotPassword}>Forgot password?</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.loginText}>
-            Already a member? <Text style={styles.loginLink}>Login</Text>
+
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+          <Text style={styles.loginBtnText}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.registerText}>
+            Not a member? <Text style={styles.registerLink}>Register now</Text>
           </Text>
         </TouchableOpacity>
 
@@ -132,19 +138,23 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 30, // Moves it up dynamically
   },
-  logo: {
-    alignSelf: 'center',
-    width: 230,
-    height: 230,
-    marginBottom: 10,
-  },
   title: {
     fontSize: 45,
     color: '#000000',
     alignSelf: 'center',
     fontWeight: 'bold',
     letterSpacing: 3,
-    marginBottom: 40,
+  },
+  titleAccent: {
+    fontSize: 50,
+    color: '#0690FF',
+  },
+  secondaryTitle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: '#0690FF',
+    letterSpacing: 5,
+    marginBottom:50,
   },
   input: {
     padding: 10,
@@ -154,31 +164,35 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#00000060',
   },
-  registerBtn: {
+  forgotPassword: {
+    alignSelf: 'flex-left',
+    marginLeft: 10,
+    color: '#0690FF',
+    marginBottom: 40,
+  },
+  loginBtn: {
     backgroundColor: '#0690FF',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 40,
-    marginTop: 40,
     marginLeft: 70,
     marginRight: 70,
   },
-  registerBtnText: {
+  loginBtnText: {
     color: '#f8f9fc',
     fontSize: 20,
     fontWeight: '600',
     letterSpacing: 0.5,
   },
-  loginText: {
+  registerText: {
     marginTop: 20,
     fontSize: 14,
     color: '#000000',
     textAlign: 'center',
   },
-  loginLink: {
-    color: '#007bff',
+  registerLink: {
+    color: '#0690FF',
   },
 });
 
-export default RegisterScreen;
+export default LoginScreen;

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { API_URL } from '../config';
+import { API_URL } from '../../config';
 
 export default function FitnessPreferenceScreen({ navigation }) {
   // For "Level" dropdown
