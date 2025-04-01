@@ -28,6 +28,13 @@ export default function RecommendedScheduleScreen() {
 
         const token = await AsyncStorage.getItem('userToken');
 
+        // Jacob: Ensures token exists
+        if (!token) {
+          Alert.alert('Error', 'User  is not authenticated. Please log in.');
+          setLoading(false);
+          return;
+        }
+
         // 1) Fetch recommended program
         let response = await fetch(`${API_URL}/recommended-program`, {
           headers: { Authorization: `Bearer ${token}` }

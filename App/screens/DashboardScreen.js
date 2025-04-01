@@ -25,6 +25,13 @@ const DashboardScreen = () => {
         const fetchUserName = async () => {
             try {
                 const token = await AsyncStorage.getItem('userToken');
+
+                // Jacob: Ensures token exists
+                if (!token) {
+                    Alert.alert('Error', 'User  is not authenticated. Please log in.');
+                    return;
+                }
+
                 const response = await fetch(`${API_URL}/user`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -40,6 +47,13 @@ const DashboardScreen = () => {
         const fetchProgramName = async () => {
             try {
                 const token = await AsyncStorage.getItem('userToken');
+
+                // Jacob: Ensures token exists
+                if (!token) {
+                    Alert.alert('Error', 'User  is not authenticated. Please log in.');
+                    return;
+                }
+
                 const response = await fetch(`${API_URL}/recommended-program`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -60,6 +74,7 @@ const DashboardScreen = () => {
                 }
             } catch (error) {
                 console.error('Error fetching program name:', error);
+                Alert.alert('Error', 'Could not load program name.');
             }
         };
 

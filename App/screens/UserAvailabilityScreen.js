@@ -20,6 +20,13 @@ export default function UserAvailabilityScreen({ navigation }) {
     const fetchAvailability = async () => {
       try {
         const token = await AsyncStorage.getItem('userToken');
+
+        // Jacob: Ensures token exists
+        if (!token) {
+          Alert.alert('Error', 'User  is not authenticated. Please log in.');
+          return;
+        }
+
         const res = await fetch(`${API_URL}/user-availability`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -37,6 +44,7 @@ export default function UserAvailabilityScreen({ navigation }) {
         }
       } catch (error) {
         console.error('Error fetching availability:', error);
+        Alert.alert('Error', 'An error occurred while fetching availability.');
       }
     };
     fetchAvailability();
@@ -58,6 +66,13 @@ export default function UserAvailabilityScreen({ navigation }) {
   const handleSave = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
+
+      // Jacob: Ensures token exists
+      if (!token) {
+        Alert.alert('Error', 'User  is not authenticated. Please log in.');
+        return;
+      }
+
       const res = await fetch(`${API_URL}/user-availability`, {
         method: 'POST',
         headers: {

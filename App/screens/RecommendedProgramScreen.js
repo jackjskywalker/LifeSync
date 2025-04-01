@@ -21,6 +21,14 @@ export default function RecommendedProgramScreen({ navigation }) {
         try {
             setLoading(true);
             const token = await AsyncStorage.getItem('userToken');
+
+             // Jacob: checks if token exists
+             if (!token) {
+                Alert.alert('Error', 'User  is not authenticated. Please log in.');
+                setLoading(false);
+                return;
+            }
+
             const response = await fetch(`${API_URL}/recommended-program`, {
                 method: 'GET',
                 headers: {

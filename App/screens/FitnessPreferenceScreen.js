@@ -69,6 +69,13 @@ export default function FitnessPreferenceScreen({ navigation }) {
 
     try {
       const token = await AsyncStorage.getItem('userToken');
+
+      // Jacob: Ensures token exists
+      if (!token) {
+        Alert.alert('Error', 'User  is not authenticated. Please log in.');
+        return;
+      }
+
       const response = await fetch(`${API_URL}/user-preference`, {
         method: 'POST',
         headers: {
@@ -97,6 +104,13 @@ export default function FitnessPreferenceScreen({ navigation }) {
     const fetchPreferences = async () => {
       try {
         const token = await AsyncStorage.getItem('userToken');
+
+        // Jacob: Ensures token exists
+        if (!token) {
+          Alert.alert('Error', 'User  is not authenticated. Please log in.');
+          return;
+        }
+
         const res = await fetch(`${API_URL}/user-preference`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -116,6 +130,8 @@ export default function FitnessPreferenceScreen({ navigation }) {
         }
       } catch (error) {
         console.error('Error fetching preferences:', error);
+        // Jacob: show alert if error occurs
+        Alert.alert('Error', 'An error occurred while fetching preferences.');
       }
     };
     fetchPreferences();

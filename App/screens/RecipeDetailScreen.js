@@ -126,7 +126,7 @@ const recipeDetails = {
             'Olive oil'
         ],
         instructions: [
-            'Preheat oven to 375°F (190°C).',
+            'Preheat oven to 375ï¿½F (190ï¿½C).',
             'In a skillet, heat olive oil over medium heat. Add diced onion and garlic and cook until softened.',
             'Add ground beef to the skillet and cook until browned. Drain excess fat.',
             'Stir in cooked rice, diced tomatoes, Italian seasoning, salt, and pepper.',
@@ -441,7 +441,7 @@ const recipeDetails = {
             'Salt and pepper to taste'
         ],
         instructions: [
-            'Preheat oven to 400°F (200°C).',
+            'Preheat oven to 400ï¿½F (200ï¿½C).',
             'Pierce the sweet potatoes with a fork and place them on a baking sheet.',
             'Bake for 45-50 minutes, or until tender.',
             'In a large bowl, combine black beans, corn, red bell pepper, red onion, avocado, and cilantro.',
@@ -530,7 +530,7 @@ const recipeDetails = {
             'Fresh thyme, for garnish'
         ],
         instructions: [
-            'Preheat oven to 400°F (200°C).',
+            'Preheat oven to 400ï¿½F (200ï¿½C).',
             'Wrap each steak with 2 slices of bacon and secure with toothpicks.',
             'Heat olive oil in a large oven-safe skillet over medium-high heat. Add minced garlic and cook until fragrant.',
             'Sear the steaks for 2-3 minutes on each side, until browned.',
@@ -575,10 +575,10 @@ const recipeDetails = {
             '1/2 cup chicken broth'
         ],
         instructions: [
-            'Preheat oven to 450°F (230°C).',
+            'Preheat oven to 450ï¿½F (230ï¿½C).',
             'Rub the pork belly with olive oil, minced garlic, salt, black pepper, and dried thyme.',
             'Place the pork belly on a roasting rack set inside a baking dish.',
-            'Roast in the preheated oven for 30 minutes, then reduce the oven temperature to 325°F (165°C).',
+            'Roast in the preheated oven for 30 minutes, then reduce the oven temperature to 325ï¿½F (165ï¿½C).',
             'Pour chicken broth into the baking dish and continue to roast for an additional 1.5-2 hours, or until the pork is tender and the skin is crispy.',
             'Let rest for 10 minutes before slicing and serving.'
         ],
@@ -639,7 +639,7 @@ const recipeDetails = {
             'Salt and pepper to taste'
         ],
         instructions: [
-            'Preheat oven to 400°F (200°C).',
+            'Preheat oven to 400ï¿½F (200ï¿½C).',
             'In a small bowl, whisk together orange juice, honey, soy sauce, rice vinegar, minced garlic, salt, and pepper.',
             'Heat a large oven-safe skillet over medium-high heat. Add duck breasts, skin-side down, and sear for 5-7 minutes, until the skin is crispy.',
             'Flip the duck breasts and pour the orange glaze over them.',
@@ -696,6 +696,13 @@ const recipeDetails = {
 
 export default function RecipeDetailScreen({ route }) {
     const { recipeId } = route.params;
+
+    // Jacob: Ensures recipeId exists and is valid
+    if (!recipeId || !recipeDetails[recipeId]) {
+        Alert.alert('Error', 'Recipe not found.');
+        return null; // Return null or a fallback UI if the recipe is not found
+    }
+
     const recipe = recipeDetails[recipeId];
 
     return (
