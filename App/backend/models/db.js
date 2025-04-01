@@ -8,4 +8,15 @@ const pool = new Pool({
   },
 });
 
+// Jacob: Tests the connection to the database
+pool.connect()
+  .then(() => {
+    console.log('Connected to the database successfully.');
+  })
+  .catch((error) => {
+    console.error('Error connecting to the database:', error);
+    // // Optionally, exits the process if the connection fails
+    // process.exit(1);
+  });
+
 module.exports = pool;
